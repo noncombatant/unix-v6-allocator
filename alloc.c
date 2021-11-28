@@ -2,30 +2,33 @@
  * C library -- alloc/free
  */
 
+#include <stddef.h>
+#include <unistd.h>
+
+#include "alloc.h"
+
 #define	logical	char *
 
 struct fb {
-	logical	size;
-	char	*next;
+	size_t	size;
+	struct fb* next;
 };
 
-int	freelist[] {
-	0,
-	-1,
+struct fb	freelist[] = {
+  { 0, -1, }
 };
-logical	slop	2;
+size_t	slop = sizeof(void*);
 
-alloc(asize)
-logical asize;
+void* v6alloc(size_t asize)
 {
-	register logical size;
-	register logical np;
-	register logical cp;
+	register size_t size;
+	register struct fb* np;
+	register struct fb* cp;
 
 	if ((size = asize) == 0)
 		return(0);
-	size =+ 3;
-	size =& ~01;
+	size += 3 * sizeof(void*);
+	size &= ~01;
 	for (;;) {
 		for (cp=freelist; (np= cp->next) != -1; cp=np) {
 			if (np->size>=size) {
@@ -45,18 +48,17 @@ logical asize;
 			return (-1);
 		}
 		cp->size = asize;
-		free(&cp->next);
+		v6free(&cp->next);
 	}
 }
 
-free(aptr)
-char *aptr;
+void v6free(char* aptr)
 {
-	register logical ptr;
-	register logical cp;
-	register logical np;
+	register struct fb* ptr;
+	register struct fb* cp;
+	register struct fb* np;
 
-	ptr = aptr-2;
+	ptr = aptr-sizeof(void*);
 	cp = freelist;
 	while ((np = cp->next) < ptr)
 		cp = np;
