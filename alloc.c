@@ -7,8 +7,6 @@
 
 #include "alloc.h"
 
-#define logical char*
-
 typedef struct FreelistBlock {
   size_t size;
   struct FreelistBlock* next;
