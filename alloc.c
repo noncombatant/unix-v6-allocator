@@ -46,15 +46,15 @@ void* v6alloc(size_t asize) {
     }
     asize = size < 1024 ? 1024 : size;
     if ((current = sbrk(asize)) == -1) {
-      return -1;
+      return NULL;
     }
     current->size = asize;
     v6free(&current->next);
   }
 }
 
-void v6free(char* aptr) {
-  FreelistBlock* ptr = aptr - sizeof(void*);
+void v6free(void* aptr) {
+  FreelistBlock* ptr = (FreelistBlock*)(((char*)aptr) - sizeof(void*));
   FreelistBlock* current = freelist;
   FreelistBlock* next;
   while ((next = current->next) < ptr) {
