@@ -45,7 +45,7 @@ void* v6alloc(size_t asize) {
       }
     }
     asize = size < 1024 ? 1024 : size;
-    if ((current = sbrk(asize)) == -1) {
+    if ((current = sbrk(asize)) == END) {
       return NULL;
     }
     current->size = asize;
