@@ -1,4 +1,5 @@
-CFLAGS = -g -O0
+CC = clang
+CFLAGS = -Weverything -g -O0 -std=c17
 
 test: test.c alloc.c
 
