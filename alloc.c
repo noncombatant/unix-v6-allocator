@@ -22,54 +22,54 @@ size_t slop = sizeof(void*);
 
 void* v6alloc(size_t asize) {
   size_t size;
-  FreelistBlock* np;
-  FreelistBlock* cp;
+  FreelistBlock* next;
+  FreelistBlock* current;
 
   if ((size = asize) == 0)
     return (0);
   size += 3 * sizeof(void*);
   size &= ~01;
   for (;;) {
-    for (cp = freelist; (np = cp->next) != -1; cp = np) {
-      if (np->size >= size) {
-        if (size + slop >= np->size) {
-          cp->next = np->next;
-          return (&np->next);
+    for (current = freelist; (next = current->next) != -1; current = next) {
+      if (next->size >= size) {
+        if (size + slop >= next->size) {
+          current->next = next->next;
+          return (&next->next);
         }
-        cp = cp->next = np + size;
-        cp->size = np->size - size;
-        cp->next = np->next;
-        np->size = size;
-        return (&np->next);
+        current = current->next = next + size;
+        current->size = next->size - size;
+        current->next = next->next;
+        next->size = size;
+        return (&next->next);
       }
     }
     asize = size < 1024 ? 1024 : size;
-    if ((cp = sbrk(asize)) == -1) {
+    if ((current = sbrk(asize)) == -1) {
       return (-1);
     }
-    cp->size = asize;
-    v6free(&cp->next);
+    current->size = asize;
+    v6free(&current->next);
   }
 }
 
 void v6free(char* aptr) {
   FreelistBlock* ptr;
-  FreelistBlock* cp;
-  FreelistBlock* np;
+  FreelistBlock* current;
+  FreelistBlock* next;
 
   ptr = aptr - sizeof(void*);
-  cp = freelist;
-  while ((np = cp->next) < ptr)
-    cp = np;
-  if (ptr + ptr->size == np) {
-    ptr->size = +np->size;
-    ptr->next = np->next;
-    np = ptr;
+  current = freelist;
+  while ((next = current->next) < ptr)
+    current = next;
+  if (ptr + ptr->size == next) {
+    ptr->size = +next->size;
+    ptr->next = next->next;
+    next = ptr;
   } else
-    ptr->next = np;
-  if (cp + cp->size == ptr) {
-    cp->size = +ptr->size;
-    cp->next = ptr->next;
+    ptr->next = next;
+  if (current + current->size == ptr) {
+    current->size = +ptr->size;
+    current->next = ptr->next;
   } else
-    cp->next = ptr;
+    current->next = ptr;
 }
