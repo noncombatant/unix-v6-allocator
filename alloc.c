@@ -21,9 +21,9 @@ struct fb freelist[] = {{
 size_t slop = sizeof(void*);
 
 void* v6alloc(size_t asize) {
-  register size_t size;
-  register struct fb* np;
-  register struct fb* cp;
+  size_t size;
+  struct fb* np;
+  struct fb* cp;
 
   if ((size = asize) == 0)
     return (0);
@@ -53,9 +53,9 @@ void* v6alloc(size_t asize) {
 }
 
 void v6free(char* aptr) {
-  register struct fb* ptr;
-  register struct fb* cp;
-  register struct fb* np;
+  struct fb* ptr;
+  struct fb* cp;
+  struct fb* np;
 
   ptr = aptr - sizeof(void*);
   cp = freelist;
