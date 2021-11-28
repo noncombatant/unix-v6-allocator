@@ -9,12 +9,12 @@
 
 #define logical char*
 
-struct fb {
+typedef struct FreelistBlock {
   size_t size;
-  struct fb* next;
-};
+  struct FreelistBlock* next;
+} FreelistBlock;
 
-struct fb freelist[] = {{
+FreelistBlock freelist[] = {{
     0,
     -1,
 }};
@@ -22,8 +22,8 @@ size_t slop = sizeof(void*);
 
 void* v6alloc(size_t asize) {
   size_t size;
-  struct fb* np;
-  struct fb* cp;
+  FreelistBlock* np;
+  FreelistBlock* cp;
 
   if ((size = asize) == 0)
     return (0);
@@ -53,9 +53,9 @@ void* v6alloc(size_t asize) {
 }
 
 void v6free(char* aptr) {
-  struct fb* ptr;
-  struct fb* cp;
-  struct fb* np;
+  FreelistBlock* ptr;
+  FreelistBlock* cp;
+  FreelistBlock* np;
 
   ptr = aptr - sizeof(void*);
   cp = freelist;
