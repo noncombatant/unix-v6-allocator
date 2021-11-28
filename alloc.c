@@ -12,9 +12,11 @@ typedef struct FreelistBlock {
   struct FreelistBlock* next;
 } FreelistBlock;
 
+#define END ((FreelistBlock*)-1)
+
 FreelistBlock freelist[] = {{
     0,
-    -1,
+    END,
 }};
 size_t slop = sizeof(void*);
 
@@ -29,7 +31,7 @@ void* v6alloc(size_t asize) {
   for (;;) {
     FreelistBlock* next;
     FreelistBlock* current;
-    for (current = freelist; (next = current->next) != -1; current = next) {
+    for (current = freelist; (next = current->next) != END; current = next) {
       if (next->size >= size) {
         if (size + slop >= next->size) {
           current->next = next->next;
