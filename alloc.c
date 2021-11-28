@@ -14,7 +14,7 @@ typedef struct FreelistBlock {
 
 #define END ((FreelistBlock*)-1)
 
-FreelistBlock freelist[] = {{
+static FreelistBlock freelist[] = {{
     0,
     END,
 }};
