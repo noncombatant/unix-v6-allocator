@@ -26,7 +26,7 @@ void* v6alloc(size_t asize) {
   }
   size_t size = asize;
   size += 3 * sizeof(void*);
-  size &= ~01;
+  size &= ~01U;
 
   for (;;) {
     FreelistBlock* next;
