@@ -8,7 +8,7 @@ int main() {
     size_t s = sizes[i];
     char* p = v6alloc(s);
     size_t* size = (size_t*)(p - sizeof(void*));
-    printf("p: %p (%zu bytes allocated)\n", p, *size);
+    printf("p: %p (%zu bytes allocated)\n", (void*)p, *size);
     v6free(p);
   }
 }
