@@ -4,6 +4,7 @@
 
 #define _DEFAULT_SOURCE
 #include <stddef.h>
+#include <stdint.h>
 #include <unistd.h>
 
 #include "alloc.h"
@@ -46,7 +47,7 @@ void* v6alloc(size_t asize) {
       }
     }
     asize = size < 1024 ? 1024 : size;
-    if ((current = sbrk(asize)) == END) {
+    if (asize > INTPTR_MAX || (current = sbrk((intptr_t)asize)) == END) {
       return NULL;
     }
     current->size = asize;
