@@ -24,7 +24,7 @@ size_t slop = sizeof(void*);
 
 void* v6alloc(size_t asize) {
   if (asize == 0) {
-    return 0;
+    return NULL;
   }
   size_t size = asize;
   size += 3 * sizeof(void*);
