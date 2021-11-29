@@ -2,6 +2,7 @@
  * C library -- alloc/free
  */
 
+#define _DEFAULT_SOURCE
 #include <stddef.h>
 #include <unistd.h>
 
